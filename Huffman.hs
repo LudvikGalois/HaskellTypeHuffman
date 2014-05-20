@@ -200,4 +200,16 @@ testHuffman = huffmanEncode testString
 testHuffmanTree = first testHuffman
 encodedTestString = second testHuffman
 decodedTestString = huffmanDecode testHuffmanTree encodedTestString
-decodedIsOriginal = (leq testString decodedTestString) `and` (leq decodedTestString testString)
+
+-- For testing
+class ListEqual a b c | a b -> c where
+  listEqual :: a -> b -> c
+  listEqual = undefined
+
+instance ListEqual Nil Nil True
+instance ListEqual (x ::: xs) Nil False
+instance ListEqual Nil (y ::: ys) False
+instance (LEQ x y leq, LEQ y x gte, And leq gte eq, ListEqual xs ys listeq,
+          And listeq eq res) => ListEqual (x ::: xs) (y ::: ys) res
+                    
+decodedIsOriginal = listEqual decodedTestString testString
